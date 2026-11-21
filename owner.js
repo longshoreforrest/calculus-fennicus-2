@@ -44,7 +44,7 @@ export function initOwner(R, CFG) {
   };
   const st = { open: false, items: [], byPage: new Map(), loading: false, filter: '', tab: 'open', showDone: false, statusMap: {} };
   const buildOf = (doc) => (CFG.docVersions && CFG.docVersions[doc]) || CFG.buildVersion || '';
-  const DOCN = { kirja: 'Kirja', ratkaisut: 'Ratk.', lukukartta: 'Kartta' };
+  const DOCN = { kirja: 'Kirja', ratkaisut: 'Ratk.', lukukartta: 'Kartta', 'kirja-en': 'EN', 'ratkaisut-en': 'EN sol.' };
 
   /* ---------- tabs + "show handled on pages" toggle (built here, no HTML change needed) ---------- */
   const tabs = document.createElement('span'); tabs.className = 'ownerTabs';

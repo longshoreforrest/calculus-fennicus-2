@@ -19,6 +19,8 @@ window.CF2_CONFIG = {
     kirja:      { label: 'Kirja',      short: 'Kirja' },
     ratkaisut:  { label: 'Ratkaisut',  short: 'Ratk.' },
     lukukartta: { label: 'Lukukartta', short: 'Kartta' },
+    'kirja-en':     { label: 'Book (EN)',      short: 'EN' },
+    'ratkaisut-en': { label: 'Solutions (EN)', short: 'EN sol.' },
   },
   defaultDoc: 'kirja',
 
@@ -52,12 +54,14 @@ window.CF2_CONFIG = {
   docVersions: {},
 };
 
-/* publish2.mjs 20261121-1528 */
+/* publish2.mjs 20261121-1637 */
 Object.assign(window.CF2_CONFIG, {
-  "buildVersion": "20261121-1528",
+  "buildVersion": "20261121-1637",
   "docVersions": {
     "kirja": "4e3e8fe2db05",
     "ratkaisut": "c1d607a794f4",
-    "lukukartta": "43c5d072277b"
+    "lukukartta": "43c5d072277b",
+    "kirja-en": "e166f773131e",
+    "ratkaisut-en": "10b0b6518561"
   }
 });

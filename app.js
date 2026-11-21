@@ -294,14 +294,14 @@ function renderHome(c) {
       h('a', { class: 'btn lg', href: '#osat' }, 'Selaa osia')),
     h('dl', { class: 'stats' }, stats.map(([n, l]) => h('div', { class: 'stat' }, h('dt', {}, fmt(n)), h('dd', {}, l)))));
 
-  const docOrder = ['kirja', 'ratkaisut', 'lukukartta'];
+  const docOrder = ['kirja', 'ratkaisut', 'lukukartta', 'kirja-en', 'ratkaisut-en'];
   const docs = h('section', { class: 'section', id: 'lue' },
     h('h2', {}, U.docsHeading || ''),
     h('p', { class: 'muted' }, U.docsIntro || ''),
     h('div', { class: 'cards three' }, docOrder.filter((d) => c.docs && c.docs[d]).map((d, i) => {
       const D = c.docs[d];
       return h('a', { class: 'card doc d' + i, href: docHref(d) },
-        h('span', { class: 'ico', 'aria-hidden': 'true' }, ['📖', '✎', '🗺'][i]),
+        h('span', { class: 'ico', 'aria-hidden': 'true' }, ['📖', '✎', '🗺', '📖', '✎'][i]),
         h('h3', {}, D.title),
         h('p', { class: 'name' }, D.name),
         h('p', {}, D.desc),
