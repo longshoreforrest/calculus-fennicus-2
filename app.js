@@ -258,7 +258,18 @@ function h(tag, attrs, ...kids) {
   return el;
 }
 const fmt = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-const docHref = (doc, dest) => '#doc=' + doc + (dest ? '&dest=' + encodeURIComponent(dest) : '');
+const getLang = () => { try { return localStorage.getItem(CFG.langKey || 'cf2-lang') === 'en' ? 'en' : 'fi'; } catch (_) { return 'fi'; } };
+const setLang = (l) => { try { localStorage.setItem(CFG.langKey || 'cf2-lang', l); } catch (_) {} };
+const langDoc = (doc) => (getLang() === 'en' && CFG.docs && CFG.docs[doc + '-en'] ? doc + '-en' : doc);
+const docHref = (doc, dest) => '#doc=' + langDoc(doc) + (dest ? '&dest=' + encodeURIComponent(dest) : '');
+function langSwitch(onChange) {
+  const mk = (l, label, title) => {
+    const flag = h('span', { class: 'flag' }); flag.innerHTML = (CFG.flags && CFG.flags[l]) || '';
+    return h('button', { type: 'button', class: getLang() === l ? 'on' : '', title, 'aria-pressed': getLang() === l ? 'true' : 'false',
+      onclick: () => { if (getLang() !== l) { setLang(l); onChange(); } } }, flag, h('span', {}, label));
+  };
+  return h('div', { class: 'langsel', role: 'group', 'aria-label': 'Kieli / Language' }, mk('fi', 'FI', 'Suomeksi'), mk('en', 'EN', 'In English'));
+}
 
 function renderHome(c) {
   const home = $('home');
@@ -278,7 +289,7 @@ function renderHome(c) {
       h('a', { href: '#lue' }, 'Lue'), h('a', { href: '#osat' }, 'Osat'),
       h('a', { href: '#niteet', class: 'hide-sm' }, 'Kaksi nidettä'), h('a', { href: '#tekijat', class: 'hide-sm' }, 'Tekijä'),
       c.volume1 ? h('a', { href: c.volume1.url, target: '_blank', rel: 'noopener' }, 'Nide 1 ↗') : null),
-    themeBtn, userChip);
+    langSwitch(() => renderHome(c)), themeBtn, userChip);
 
   const U = c.ui || {};
   const SL = U.statLabels || {};
@@ -290,18 +301,18 @@ function renderHome(c) {
     h('p', { class: 'lead' }, c.lead),
     h('p', { class: 'mission' }, c.mission),
     h('div', { class: 'cta' },
-      h('a', { class: 'btn primary lg', href: docHref('kirja') }, 'Lue kirja'),
+      h('a', { class: 'btn primary lg', href: docHref('kirja') }, getLang() === 'en' ? 'Read the book' : 'Lue kirja'),
       h('a', { class: 'btn lg', href: '#osat' }, 'Selaa osia')),
     h('dl', { class: 'stats' }, stats.map(([n, l]) => h('div', { class: 'stat' }, h('dt', {}, fmt(n)), h('dd', {}, l)))));
 
-  const docOrder = ['kirja', 'ratkaisut', 'lukukartta', 'kirja-en', 'ratkaisut-en'];
+  const docOrder = ['kirja', 'ratkaisut', 'lukukartta'];
   const docs = h('section', { class: 'section', id: 'lue' },
     h('h2', {}, U.docsHeading || ''),
     h('p', { class: 'muted' }, U.docsIntro || ''),
     h('div', { class: 'cards three' }, docOrder.filter((d) => c.docs && c.docs[d]).map((d, i) => {
-      const D = c.docs[d];
+      const D = c.docs[langDoc(d)] || c.docs[d];
       return h('a', { class: 'card doc d' + i, href: docHref(d) },
-        h('span', { class: 'ico', 'aria-hidden': 'true' }, ['📖', '✎', '🗺', '📖', '✎'][i]),
+        h('span', { class: 'ico', 'aria-hidden': 'true' }, ['📖', '✎', '🗺'][i]),
         h('h3', {}, D.title),
         h('p', { class: 'name' }, D.name),
         h('p', {}, D.desc),

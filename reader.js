@@ -102,6 +102,7 @@ export function initReader(app) {
   setupNav();
   setupOutlineUi();
   setupDocSelector();
+  setupLangSelector();
   return Reader;
 }
 
@@ -697,14 +698,48 @@ function setupDocSelector() {
   const sel = $('docSel'); if (!sel) return;
   sel.addEventListener('click', (e) => {
     const b = e.target.closest('button[data-doc]'); if (!b) return;
-    const doc = b.dataset.doc;
+    const doc = withLang(b.dataset.doc, getLang());
     if (doc === state.doc) return;
     Reader.emit('doc_switch', { from: state.doc, to: doc });
     location.hash = '#doc=' + doc;   // app.js routes it (history entry → browser back works)
   });
 }
+/* Language switch: '<base>-en' is the English edition of document '<base>'. */
+const baseOf = (doc) => String(doc || '').replace(/-en$/, '');
+const langOf = (doc) => (/-en$/.test(String(doc || '')) ? 'en' : 'fi');
+const hasEn = (base) => DOC_IDS.includes(base + '-en');
+const withLang = (base, lang) => (lang === 'en' && hasEn(base) ? base + '-en' : base);
+function getLang() { try { return localStorage.getItem(CFG.langKey || 'cf2-lang') === 'en' ? 'en' : 'fi'; } catch (_) { return 'fi'; } }
+function setLang(l) { try { localStorage.setItem(CFG.langKey || 'cf2-lang', l); } catch (_) {} }
+const TAB_NAMES = { fi: { kirja: ['Kirja', 'Kirja'], ratkaisut: ['Ratkaisut', 'Ratk.'] }, en: { kirja: ['Book', 'Book'], ratkaisut: ['Solutions', 'Sol.'] } };
+function setupLangSelector() {
+  const sel = $('langSel'); if (!sel) return;
+  sel.querySelectorAll('button[data-lang]').forEach((b) => { const f = b.querySelector('.flag'); if (f && CFG.flags) f.innerHTML = CFG.flags[b.dataset.lang] || ''; });
+  sel.addEventListener('click', (e) => {
+    const b = e.target.closest('button[data-lang]'); if (!b || b.disabled) return;
+    const lang = b.dataset.lang;
+    setLang(lang);
+    const doc = withLang(baseOf(state.doc), lang);
+    if (doc === state.doc) { updateDocSelector(state.doc); return; }
+    Reader.emit('doc_switch', { from: state.doc, to: doc });
+    location.hash = '#doc=' + doc;
+  });
+}
 function updateDocSelector(doc) {
-  document.querySelectorAll('#docSel button[data-doc]').forEach((b) => b.classList.toggle('on', b.dataset.doc === doc));
+  const base = baseOf(doc);
+  // an opened document with an English edition decides the language (deep links keep working)
+  if (hasEn(base)) setLang(langOf(doc));
+  const lang = hasEn(base) ? langOf(doc) : getLang();
+  document.querySelectorAll('#docSel button[data-doc]').forEach((b) => {
+    b.classList.toggle('on', b.dataset.doc === base);
+    const n = (TAB_NAMES[lang] || {})[b.dataset.doc];
+    if (n) { const l = b.querySelector('.l'), s = b.querySelector('.s'); if (l) l.textContent = n[0]; if (s) s.textContent = n[1]; }
+  });
+  document.querySelectorAll('#langSel button[data-lang]').forEach((b) => {
+    b.classList.toggle('on', b.dataset.lang === (hasEn(base) ? langOf(doc) : 'fi'));
+    b.disabled = b.dataset.lang === 'en' && !hasEn(base);
+    if (b.dataset.lang === 'en') b.title = hasEn(base) ? 'In English' : 'Vain suomeksi';
+  });
 }
 function updateDownloadBtn() {
   const b = $('dlBtn'); if (!b) return;

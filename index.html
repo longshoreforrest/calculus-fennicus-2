@@ -12,9 +12,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap" />
-<link rel="stylesheet" href="./site.css?v=20261121-1637" />
-<link rel="stylesheet" href="./reader.css?v=20261121-1637" />
-<script src="./config.js?v=20261121-1637"></script>
+<link rel="stylesheet" href="./site.css?v=20261121-1640" />
+<link rel="stylesheet" href="./reader.css?v=20261121-1640" />
+<script src="./config.js?v=20261121-1640"></script>
 <script>
   // Theme (light / dark / auto) before first paint.
   (function () { try { var t = localStorage.getItem('cf2:theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; } catch (_) {} })();
@@ -57,8 +57,10 @@
       <button type="button" data-doc="kirja" role="tab"><span class="l">Kirja</span><span class="s">Kirja</span></button>
       <button type="button" data-doc="ratkaisut" role="tab"><span class="l">Ratkaisut</span><span class="s">Ratk.</span></button>
       <button type="button" data-doc="lukukartta" role="tab"><span class="l">Lukukartta</span><span class="s">Kartta</span></button>
-      <button type="button" data-doc="kirja-en" role="tab"><span class="l">Book (EN)</span><span class="s">EN</span></button>
-      <button type="button" data-doc="ratkaisut-en" role="tab"><span class="l">Solutions (EN)</span><span class="s">EN sol.</span></button>
+    </div>
+    <div id="langSel" class="langsel" role="group" aria-label="Kieli / Language">
+      <button type="button" data-lang="fi" title="Suomeksi"><span class="flag"></span><span>FI</span></button>
+      <button type="button" data-lang="en" title="In English"><span class="flag"></span><span>EN</span></button>
     </div>
     <span class="spacer"></span>
     <div class="grp">
@@ -148,6 +150,6 @@
 
 <div id="toast">&nbsp;</div>
 
-<script type="module" src="./app.js?v=20261121-1637"></script>
+<script type="module" src="./app.js?v=20261121-1640"></script>
 </body>
 </html>

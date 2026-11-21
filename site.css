@@ -137,3 +137,13 @@ a.card:hover{transform:translateY(-2px)}
 .footlinks a{color:inherit}
 .author a{color:inherit; text-decoration:none}
 .author a:hover b{text-decoration:underline}
+
+/* Language switch (FI / EN) — home header and reader bar */
+.langsel{display:inline-flex; border:1px solid var(--line); border-radius:9px; overflow:hidden; flex:none}
+.langsel button{border:0; background:transparent; color:var(--ink); padding:6px 9px; font-size:12px; font-weight:600; line-height:1; letter-spacing:.03em; display:inline-flex; align-items:center; gap:6px; cursor:pointer}
+.langsel button+button{border-left:1px solid var(--line)}
+.langsel button.on{background:var(--accent); color:var(--accent-ink)}
+.langsel button:disabled{opacity:.4; cursor:default}
+.langsel .flag{display:inline-flex}
+.langsel svg{display:block; border-radius:2px; box-shadow:0 0 0 1px rgba(0,0,0,.18)}
+@media (max-width:640px){ .langsel button{padding:6px 7px; gap:4px} }

@@ -23,6 +23,12 @@ window.CF2_CONFIG = {
     'ratkaisut-en': { label: 'Solutions (EN)', short: 'EN sol.' },
   },
   defaultDoc: 'kirja',
+  // Language switch (FI / EN): a document id with the suffix '-en' is the English edition of the base id.
+  langKey: 'cf2-lang',
+  flags: {
+    fi: '<svg viewBox="0 0 18 11" width="18" height="11" aria-hidden="true"><rect width="18" height="11" fill="#fff"/><rect x="5" width="3" height="11" fill="#003580"/><rect y="4" width="18" height="3" fill="#003580"/></svg>',
+    en: '<svg viewBox="0 0 60 36" width="18" height="11" aria-hidden="true" preserveAspectRatio="none"><rect width="60" height="36" fill="#012169"/><path d="M0,0 L60,36 M60,0 L0,36" stroke="#fff" stroke-width="7"/><path d="M0,0 L60,36 M60,0 L0,36" stroke="#C8102E" stroke-width="2.5"/><path d="M30,0 v36 M0,18 h60" stroke="#fff" stroke-width="12"/><path d="M30,0 v36 M0,18 h60" stroke="#C8102E" stroke-width="7"/></svg>',
+  },
 
   // Links inside the PDFs that point at these bases open IN the reader (no reload).
   siteBaseUrls: ['https://longshoreforrest.github.io/calculus-fennicus-2/'],
@@ -54,9 +60,9 @@ window.CF2_CONFIG = {
   docVersions: {},
 };
 
-/* publish2.mjs 20261121-1637 */
+/* publish2.mjs 20261121-1640 */
 Object.assign(window.CF2_CONFIG, {
-  "buildVersion": "20261121-1637",
+  "buildVersion": "20261121-1640",
   "docVersions": {
     "kirja": "4e3e8fe2db05",
     "ratkaisut": "c1d607a794f4",
