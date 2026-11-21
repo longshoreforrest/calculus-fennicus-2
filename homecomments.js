@@ -17,8 +17,8 @@ const $ = (id) => document.getElementById(id);
 let CFG = {}, flash = () => {}, sel = null, built = false;
 
 const SECTION_NAMES = {
-  fi: { top: 'Alku', lue: 'Lue verkossa', osat: 'Osat', niteet: 'Kaksi nidettä', tekijat: 'Tekijä ja lisenssi', alatunniste: 'Alatunniste' },
-  en: { top: 'Top', lue: 'Read online', osat: 'Parts', niteet: 'Two volumes', tekijat: 'Author and licence', alatunniste: 'Footer' },
+  fi: { top: 'Alku', lue: 'Lue verkossa', osat: 'Osat', niteet: 'Kaksi nidettä', vertailu: 'Vertailu', tekijat: 'Tekijä ja lisenssi', alatunniste: 'Alatunniste' },
+  en: { top: 'Top', lue: 'Read online', osat: 'Parts', niteet: 'Two volumes', vertailu: 'Comparison', tekijat: 'Author and licence', alatunniste: 'Footer' },
 };
 const T = {
   fi: { fab: 'Kommentoi sivua', bubble: 'Kommentoi', title: 'Kommentoi kotisivua', where: 'Kohta', ph: 'Mitä tähän pitäisi muuttaa? Virhe, ehdotus tai kysymys…',

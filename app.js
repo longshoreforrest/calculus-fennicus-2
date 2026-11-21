@@ -312,7 +312,9 @@ function renderHome(c) {
     h('a', { class: 'brand', href: '#' }, h('span', { class: 'mark sm' }, 'CF', h('sup', {}, 'II')), h('span', { class: 'hide-sm' }, c.title)),
     h('nav', { class: 'nav' },
       h('a', { href: '#lue' }, 'Lue'), h('a', { href: '#osat' }, 'Osat'),
-      h('a', { href: '#niteet', class: 'hide-sm' }, 'Kaksi nidettä'), h('a', { href: '#tekijat', class: 'hide-sm' }, 'Tekijä'),
+      h('a', { href: '#niteet', class: 'hide-sm' }, 'Kaksi nidettä'),
+      c.comparison ? h('a', { href: '#vertailu', class: 'hide-sm' }, c.comparison.nav || 'Vertailu') : null,
+      h('a', { href: '#tekijat', class: 'hide-sm' }, 'Tekijä'),
       c.volume1 ? h('a', { href: c.volume1.url, target: '_blank', rel: 'noopener' }, 'Nide 1 ↗') : null),
     langSwitch(() => renderHome(c)), themeBtn, userChip);
 
@@ -330,14 +332,15 @@ function renderHome(c) {
       h('a', { class: 'btn lg', href: '#osat' }, 'Selaa osia')),
     h('dl', { class: 'stats' }, stats.map(([n, l]) => h('div', { class: 'stat' }, h('dt', {}, fmt(n)), h('dd', {}, l)))));
 
-  const docOrder = ['kirja', 'ratkaisut', 'lukukartta'];
+  const docOrder = ['lukukartta', 'kirja', 'ratkaisut'];
+  const docIcon = { kirja: '📖', ratkaisut: '✎', lukukartta: '🗺' };
   const docs = h('section', { class: 'section', id: 'lue' },
     h('h2', {}, U.docsHeading || ''),
     h('p', { class: 'muted' }, U.docsIntro || ''),
     h('div', { class: 'cards three' }, docOrder.filter((d) => c.docs && c.docs[d]).map((d, i) => {
       const D = c.docs[langDoc(d)] || c.docs[d];
       return h('a', { class: 'card doc d' + i, href: docHref(d), 'data-key': 'docs.' + langDoc(d), 'data-label': D.title },
-        h('span', { class: 'ico', 'aria-hidden': 'true' }, ['📖', '✎', '🗺'][i]),
+        h('span', { class: 'ico', 'aria-hidden': 'true' }, docIcon[d]),
         h('h3', {}, D.title),
         h('p', { class: 'name' }, D.name),
         h('p', {}, D.desc),
@@ -384,9 +387,57 @@ function renderHome(c) {
     h('nav', { class: 'footlinks' }, (c.links || []).map((l) => h('a', { href: l.url, target: '_blank', rel: 'noopener' }, l.label + ' ↗'))),
     h('span', { class: 'muted' }, 'Versio ' + (c.build || CFG.buildVersion)));
 
-  home.append(header, hero, docs, parts, cont, authors, footer);
+  home.append(header, hero, docs, parts, cont, renderComparison(c.comparison, S), authors, footer);
   // Comments on the home page itself (same pipeline as the PDF comments).
   import('./homecomments.js' + V).then((m) => m.initHomeComments(CFG, flash)).catch((e) => console.warn('homecomments', e));
+}
+
+/* Comparison with other works (content.comparison). All text comes from the encrypted
+ * content; the Calculus Fennicus page counts follow the current build (stats.pages). */
+function renderComparison(X, S) {
+  if (!X) return null;
+  const v2 = S.pages || 0, v1 = X.vol1Pages || 0;
+  const calc = { both: v1 + v2, vol1: v1, vol2: v2 };
+  const pagesOf = (w) => (w.calc ? calc[w.calc] : w.pages) || 0;
+  const works = (X.works || []).map((w) => Object.assign({}, w, { n: pagesOf(w) })).sort((a, b) => b.n - a.n);
+  const max = Math.max(1, ...works.map((w) => w.n));
+  const L = X.legend || {};
+  const mark = { F: '●', P: '◐' };
+  return h('section', { class: 'section cmp', id: 'vertailu' },
+    h('h2', {}, X.heading || ''),
+    h('p', { class: 'muted', 'data-key': 'comparison.intro' }, X.intro || ''),
+    (X.finding || []).map((t, i) => h('p', { class: 'cmp-find', 'data-key': 'comparison.finding.' + i }, t)),
+    h('dl', { class: 'stats' }, (X.stats || []).map((s) => h('div', { class: 'stat' },
+      h('dt', {}, s.calc ? fmt(calc[s.calc]) : s.n), h('dd', {}, s.label)))),
+    h('h3', {}, X.pagesHeading || ''),
+    h('p', { class: 'cmp-legend' }, ['cf', 'ml', 'math'].filter((k) => L[k]).map((k) => h('span', {}, h('i', { class: 'k-' + k }), L[k]))),
+    h('div', { class: 'cmp-bars', 'data-key': 'comparison.works', 'data-label': X.pagesHeading },
+      works.map((w) => h('div', { class: 'cmp-row k-' + w.kind },
+        h('span', { class: 't', title: w.t }, w.t),
+        h('span', { class: 'bar' }, h('i', { style: 'width:' + (w.n / max * 100).toFixed(1) + '%' })),
+        h('span', { class: 'v' }, (w.approx ? 'n. ' : '') + fmt(w.n))))),
+    h('p', { class: 'muted small', 'data-key': 'comparison.pagesNote' }, X.pagesNote || ''),
+    X.matrix ? h('details', { class: 'cmp-more', 'data-key': 'comparison.matrix', 'data-label': X.matrixHeading },
+      h('summary', {}, X.matrixHeading || ''),
+      h('p', {}, X.matrixIntro || ''),
+      h('ol', { class: 'cmp-areas' }, (X.areas || []).map((a) => h('li', {}, a))),
+      h('div', { class: 'cmp-scroll' }, h('table', { class: 'cmp-mx' },
+        h('thead', {}, h('tr', {}, h('th', {}, ''), (X.areas || []).map((a, i) => h('th', { title: a }, String(i + 1))))),
+        h('tbody', {}, X.matrix.map((r) => h('tr', { class: r.cf ? 'cf' : null }, h('td', {}, r.t),
+          r.m.split('').map((ch, i) => h('td', { class: 'm-' + (mark[ch] ? ch : 'N'), title: (X.areas || [])[i] || '' }, mark[ch] || '–'))))))),
+      h('p', { class: 'muted small' }, X.matrixNote || '')) : null,
+    X.refs ? h('details', { class: 'cmp-more', 'data-key': 'comparison.refs', 'data-label': X.refsHeading },
+      h('summary', {}, X.refsHeading || ''),
+      h('p', {}, X.refsIntro || ''),
+      h('div', { class: 'cmp-scroll' }, h('table', { class: 'cmp-tbl' },
+        h('thead', {}, h('tr', {}, (X.refsHead || []).map((t, i) => h('th', { class: i > 1 ? 'n' : null }, t)))),
+        h('tbody', {}, X.refs.map((r, j) => h('tr', { class: j === X.refs.length - 1 ? 'sum' : null },
+          r.map((t, i) => h('td', { class: i > 1 ? 'n' : null }, t)))))))) : null,
+    h('details', { class: 'cmp-more', 'data-key': 'comparison.caveats', 'data-label': X.moreHeading },
+      h('summary', {}, X.moreHeading || ''),
+      X.solutions ? h('p', {}, X.solutions) : null,
+      h('ul', {}, (X.caveats || []).map((t) => h('li', {}, t))),
+      h('p', { class: 'cmp-src' }, (X.sources || []).map((s) => h('a', { href: s.url, target: '_blank', rel: 'noopener' }, s.label + ' ↗')))));
 }
 
 function toggleTheme() {

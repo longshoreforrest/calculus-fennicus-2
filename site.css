@@ -178,3 +178,48 @@ a.card:hover{transform:translateY(-2px)}
 .hc-sp{flex:1}
 @media (max-width:560px){ .hc-fab{right:12px; bottom:12px; padding:11px 14px} }
 @media print{ .hc-fab,.hc-bubble{display:none} }
+
+/* ---- comparison with other works (#vertailu) ---- */
+.cmp>p{max-width:760px}
+.cmp .cmp-find{font:400 18px/1.55 var(--serif)}
+.cmp .stats{margin:22px 0 6px}
+.cmp h3{font:600 20px/1.3 var(--serif); margin:30px 0 6px}
+.small{font-size:13.5px}
+.cmp-legend{display:flex; gap:16px; flex-wrap:wrap; font-size:13px; color:var(--muted); margin:0 0 10px}
+.cmp-legend span{display:inline-flex; align-items:center; gap:6px}
+.cmp-legend i{width:11px; height:11px; border-radius:3px; display:inline-block}
+.cmp i.k-cf,.cmp-row.k-cf .bar i{background:var(--accent)}
+.cmp i.k-ml,.cmp-row.k-ml .bar i{background:var(--gold)}
+.cmp i.k-math,.cmp-row.k-math .bar i{background:var(--muted); opacity:.55}
+.cmp-bars{background:var(--card); border:1px solid var(--line); border-radius:16px; padding:14px 16px}
+.cmp-row{display:grid; grid-template-columns:minmax(0,340px) minmax(60px,1fr) 62px; gap:12px; align-items:center; padding:4px 0; font-size:14px}
+.cmp-row .t{overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.cmp-row.k-cf .t{font-weight:700}
+.cmp-row .bar{display:block}
+.cmp-row .bar i{display:block; height:12px; border-radius:4px; min-width:2px}
+.cmp-row .v{text-align:right; font-variant-numeric:tabular-nums; color:var(--muted); white-space:nowrap}
+.cmp-more{border-top:1px solid var(--line); padding:12px 0}
+.cmp-more:last-child{border-bottom:1px solid var(--line)}
+.cmp-more summary{cursor:pointer; font:600 17px/1.3 var(--serif)}
+.cmp-more>p,.cmp-more>ul{max-width:760px}
+.cmp-more>p:first-of-type{margin-top:10px}
+.cmp-areas{columns:2; column-gap:32px; font-size:13.5px; color:var(--muted); padding-left:22px; margin:8px 0 14px}
+.cmp-scroll{overflow-x:auto}
+.cmp-mx,.cmp-tbl{border-collapse:collapse; width:100%; font-size:14px}
+.cmp-mx th,.cmp-mx td{padding:6px 4px; text-align:center; border-bottom:1px solid var(--line)}
+.cmp-mx th{font-size:12px; color:var(--muted); font-weight:600}
+.cmp-mx td:first-child{text-align:left; white-space:nowrap; padding-right:12px}
+.cmp-mx tr.cf td:first-child{font-weight:700}
+.cmp-mx .m-F{color:var(--accent)}
+.cmp-mx .m-P{color:var(--gold)}
+.cmp-mx .m-N{color:var(--muted); opacity:.5}
+.cmp-tbl th,.cmp-tbl td{padding:8px 10px; text-align:left; vertical-align:top; border-bottom:1px solid var(--line)}
+.cmp-tbl th{font-size:12px; text-transform:uppercase; letter-spacing:.05em; color:var(--muted)}
+.cmp-tbl .n{text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap}
+.cmp-tbl tr.sum td{font-weight:700; border-bottom:0}
+.cmp-src{display:flex; gap:6px 16px; flex-wrap:wrap; font-size:13.5px}
+@media (max-width:620px){
+  .cmp-row{grid-template-columns:minmax(0,1fr) 62px; gap:2px 10px}
+  .cmp-row .bar{grid-column:1 / -1; grid-row:2}
+  .cmp-areas{columns:1}
+}
