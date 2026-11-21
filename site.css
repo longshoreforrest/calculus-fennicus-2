@@ -46,6 +46,9 @@ a{color:var(--accent)}
 .gateCard .tag{color:var(--muted); margin:0 auto 26px; max-width:420px}
 .gateBtn{display:flex; justify-content:center; min-height:44px}
 .gateMsg{margin-top:16px; min-height:1.4em; color:var(--muted); font-size:14px}
+.gateAuthor{margin-top:34px; font-size:14px; color:var(--muted)}
+.gateAuthor a{color:var(--accent); text-decoration:none}
+.gateAuthor a:hover{text-decoration:underline}
 .gateMsg.err{color:#c0392b; font-weight:500}
 
 /* ---------- homepage ---------- */
