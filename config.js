@@ -53,16 +53,16 @@ window.CF2_CONFIG = {
   analytics: true,
   ownerEmails: ['longshoreforrest@gmail.com'],
   dictationLang: 'fi-FI',
-  audioEndpoint: '',
+  audioEndpoint: 'https://mypa.longshoreforrest.workers.dev/audio',   // MyPA KV-äänitallenne, liitetään Telegram-ilmoitukseen
 
   // Overwritten by publish2.mjs.
   buildVersion: 'dev',
   docVersions: {},
 };
 
-/* publish2.mjs 20261121-1646 */
+/* publish2.mjs 20261121-1715 */
 Object.assign(window.CF2_CONFIG, {
-  "buildVersion": "20261121-1646",
+  "buildVersion": "20261121-1715",
   "docVersions": {
     "kirja": "4e3e8fe2db05",
     "ratkaisut": "c1d607a794f4",
