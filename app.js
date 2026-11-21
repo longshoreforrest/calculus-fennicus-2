@@ -128,11 +128,33 @@ async function unlock(b64, how) {
   return true;
 }
 
+let pendingReq = null;
+async function sendAccessRequest(ev) {
+  ev.preventDefault();
+  if (!pendingReq) return;
+  const btn = $('gateReqBtn'); btn.disabled = true; btn.textContent = 'Lähetetään…';
+  try {
+    const r = await fetch(CFG.gateEndpoint.replace(/\/key$/, '/request'), {
+      method: 'POST', mode: 'cors', credentials: 'omit',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ idToken: pendingReq.idToken, message: $('gateReqMsg').value.trim() }),
+    });
+    if (!r.ok) throw new Error(String(r.status));
+    $('gateReq').hidden = true;
+    gateMsg('Pyyntö lähetetty kirjoittajalle (' + pendingReq.email + '). Saat tiedon, kun käyttöoikeus on lisätty — kirjaudu silloin uudelleen.');
+    track('access_request', { email: pendingReq.email });
+  } catch (e) {
+    btn.disabled = false; btn.textContent = 'Yritä uudelleen';
+    gateMsg('Pyynnön lähetys epäonnistui. Yritä hetken kuluttua uudelleen.', 'err');
+  }
+}
+
 async function requestKey(id) {
   if (unlocking || cryptoKey) return;
   unlocking = true;
   gateMsg('Tarkistetaan käyttöoikeutta…');
   $('gateOut').hidden = true;
+  if ($('gateReq')) $('gateReq').hidden = true;
   let r, j = {};
   try {
     r = await fetch(CFG.gateEndpoint, {
@@ -163,6 +185,8 @@ async function requestKey(id) {
     const email = j.email || id.email || '';
     gateMsg('Ei käyttöoikeutta (' + email + ').', 'err');
     $('gateOut').hidden = false;
+    pendingReq = { idToken: id.idToken, email };
+    if ($('gateReq')) { $('gateReq').hidden = false; $('gateReqBtn').disabled = false; $('gateReqBtn').textContent = 'Pyydä käyttöoikeutta'; }
     track('signin_denied', { email, error: j.error || 'not_allowed' });
     return;
   }
@@ -378,7 +402,8 @@ window.addEventListener('cf2-signout-request', () => signOutAll());
   showView('gate');
   const auth = await import('./auth.js' + V);
   auth.initAuth(CFG);
-  $('gateOut').addEventListener('click', () => { window.CF2Auth.signOut(); gateMsg(''); $('gateOut').hidden = true; window.CF2Auth.prompt(); });
+  $('gateOut').addEventListener('click', () => { window.CF2Auth.signOut(); gateMsg(''); $('gateOut').hidden = true; if ($('gateReq')) $('gateReq').hidden = true; pendingReq = null; window.CF2Auth.prompt(); });
+  if ($('gateReq')) $('gateReq').addEventListener('submit', sendAccessRequest);
   window.addEventListener('cf2-auth-change', (e) => { if (e.detail && e.detail.signedIn && !cryptoKey) requestKey(e.detail.id); });
   window.addEventListener('cf2-dev-signin', devSignIn);
   window.addEventListener('cf2-gis-error', () => { if (!cryptoKey) gateMsg('Google-kirjautumista ei voitu ladata. Tarkista verkkoyhteys tai selaimen eston asetukset.', 'err'); });
