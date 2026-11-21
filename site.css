@@ -154,3 +154,27 @@ a.card:hover{transform:translateY(-2px)}
 .langsel .flag{display:inline-flex}
 .langsel svg{display:block; border-radius:2px; box-shadow:0 0 0 1px rgba(0,0,0,.18)}
 @media (max-width:640px){ .langsel button{padding:6px 7px; gap:4px} }
+
+/* ---- home-page comments (homecomments.js) ---- */
+.hc-fab{position:fixed; right:18px; bottom:18px; z-index:40; display:flex; align-items:center; gap:4px; border:0; cursor:pointer;
+  background:var(--accent); color:var(--accent-ink); font:600 14px/1 var(--sans); padding:12px 16px; border-radius:999px;
+  box-shadow:0 6px 20px rgba(0,0,0,.18)}
+.hc-fab:hover{filter:brightness(1.07)}
+.hc-bubble{position:fixed; z-index:41; border:0; cursor:pointer; background:var(--ink); color:var(--bg); font:600 13px/1 var(--sans);
+  padding:8px 12px; border-radius:999px; box-shadow:0 4px 14px rgba(0,0,0,.22)}
+.hc-dlg{border:1px solid var(--line); border-radius:18px; padding:0; width:min(560px, calc(100vw - 32px));
+  background:var(--card); color:var(--ink); box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.hc-dlg::backdrop{background:rgba(10,12,18,.45); backdrop-filter:blur(2px)}
+.hc-dlg form{padding:20px 22px 18px; display:flex; flex-direction:column; gap:12px}
+.hc-dlg h3{margin:0; font:600 1.15rem/1.3 var(--sans)}
+.hc-where{margin:0; color:var(--muted); font-size:14px}
+.hc-quote{margin:0; padding:8px 12px; border-left:3px solid var(--accent); background:var(--soft); border-radius:0 10px 10px 0;
+  font-style:italic; font-size:14px; max-height:120px; overflow:auto}
+.hc-dlg textarea{font:inherit; font-size:15px; padding:10px 12px; border:1px solid var(--line); border-radius:12px;
+  background:var(--bg); color:var(--ink); resize:vertical; min-height:110px}
+.hc-dlg textarea:focus{outline:none; border-color:var(--accent); box-shadow:0 0 0 3px var(--soft)}
+.hc-row{display:flex; align-items:center; gap:8px; flex-wrap:wrap}
+.hc-row select{font:inherit; font-size:14px; padding:7px 10px; border:1px solid var(--line); border-radius:10px; background:var(--bg); color:var(--ink)}
+.hc-sp{flex:1}
+@media (max-width:560px){ .hc-fab{right:12px; bottom:12px; padding:11px 14px} }
+@media print{ .hc-fab,.hc-bubble{display:none} }

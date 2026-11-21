@@ -112,6 +112,7 @@ function showView(v) {
   $('gate').hidden = v !== 'gate';
   $('home').hidden = v !== 'home';
   $('reader').hidden = v !== 'reader';
+  if (v !== 'home') import('./homecomments.js' + V).then((m) => m.hideHomeComments()).catch(() => {});
 }
 
 async function unlock(b64, how) {
@@ -322,8 +323,8 @@ function renderHome(c) {
   const hero = h('section', { class: 'hero', id: 'top' },
     h('p', { class: 'kicker' }, U.kicker || ''),
     h('h1', {}, c.title, h('span', { class: 'sub' }, c.subtitle)),
-    h('p', { class: 'lead' }, c.lead),
-    h('p', { class: 'mission' }, c.mission),
+    h('p', { class: 'lead', 'data-key': 'lead' }, c.lead),
+    h('p', { class: 'mission', 'data-key': 'mission' }, c.mission),
     h('div', { class: 'cta' },
       h('a', { class: 'btn primary lg', href: docHref('kirja') }, getLang() === 'en' ? 'Read the book' : 'Lue kirja'),
       h('a', { class: 'btn lg', href: '#osat' }, 'Selaa osia')),
@@ -335,7 +336,7 @@ function renderHome(c) {
     h('p', { class: 'muted' }, U.docsIntro || ''),
     h('div', { class: 'cards three' }, docOrder.filter((d) => c.docs && c.docs[d]).map((d, i) => {
       const D = c.docs[langDoc(d)] || c.docs[d];
-      return h('a', { class: 'card doc d' + i, href: docHref(d) },
+      return h('a', { class: 'card doc d' + i, href: docHref(d), 'data-key': 'docs.' + langDoc(d), 'data-label': D.title },
         h('span', { class: 'ico', 'aria-hidden': 'true' }, ['📖', '✎', '🗺'][i]),
         h('h3', {}, D.title),
         h('p', { class: 'name' }, D.name),
@@ -347,7 +348,7 @@ function renderHome(c) {
   const parts = h('section', { class: 'section', id: 'osat' },
     h('h2', {}, U.partsHeading || ''),
     h('p', { class: 'muted' }, U.partsIntro || ''),
-    h('div', { class: 'cards parts' }, (c.parts || []).map((p) => h('article', { class: 'card part' },
+    h('div', { class: 'cards parts' }, (c.parts || []).map((p) => h('article', { class: 'card part', 'data-key': 'parts.' + p.id, 'data-label': p.kicker },
       h('a', { class: 'cover', href: docHref('kirja', p.dest), 'aria-label': p.kicker + ': ' + p.title },
         h('span', { class: 'num' }, p.id),
         h('span', { class: 'kick' }, p.kicker + (p.page ? ' · s. ' + p.page + (p.endPage ? '–' + p.endPage : '') : '')),
@@ -363,27 +364,29 @@ function renderHome(c) {
   const cont = h('section', { class: 'section split', id: 'niteet' },
     h('div', {},
       h('h2', {}, U.contHeading || ''),
-      (c.continuation || []).map((t) => h('p', {}, t)),
+      (c.continuation || []).map((t, i) => h('p', { 'data-key': 'continuation.' + i }, t)),
       c.volume1 ? h('p', {}, h('a', { class: 'btn', href: c.volume1.url, target: '_blank', rel: 'noopener' }, c.volume1.label + ' ↗')) : null),
-    h('ol', { class: 'timeline' },
+    h('ol', { class: 'timeline', 'data-key': 'ui.timeline' },
       (U.timeline || []).map((t) => h('li', { class: t.now ? 'now' : null }, h('b', {}, t.title), h('span', {}, t.text)))));
 
   const authors = h('section', { class: 'section', id: 'tekijat' },
     h('h2', {}, U.authorsHeading || ''),
     h('div', { class: 'authors' }, (c.authors || []).map((a) => h('div', { class: 'author' },
       h('span', { class: 'av', 'aria-hidden': 'true' }, a.initials), h('div', {}, a.url ? h('a', { href: a.url, target: '_blank', rel: 'noopener' }, h('b', {}, a.name + ' ↗')) : h('b', {}, a.name), h('span', {}, a.role))))),
-    h('p', {}, c.authorsText),
+    h('p', { 'data-key': 'authorsText' }, c.authorsText),
     c.volume1Author ? h('p', { class: 'muted' }, c.volume1Author.text + ' ', h('a', { href: c.volume1Author.url, target: '_blank', rel: 'noopener' }, c.volume1Author.name + ' ↗')) : null,
     h('h3', {}, U.licenseHeading || ''),
-    h('p', {}, c.license, ' ', c.licenseUrl ? h('a', { href: c.licenseUrl, target: '_blank', rel: 'noopener' }, (c.licenseLabel || 'Lisenssi') + ' ↗') : null),
-    c.thanks ? h('p', { class: 'muted' }, c.thanks) : null);
+    h('p', { 'data-key': 'license' }, c.license, ' ', c.licenseUrl ? h('a', { href: c.licenseUrl, target: '_blank', rel: 'noopener' }, (c.licenseLabel || 'Lisenssi') + ' ↗') : null),
+    c.thanks ? h('p', { class: 'muted', 'data-key': 'thanks' }, c.thanks) : null);
 
-  const footer = h('footer', { class: 'foot' },
+  const footer = h('footer', { class: 'foot', id: 'alatunniste', 'data-key': 'links' },
     h('span', {}, c.title + ' — ' + c.subtitle),
     h('nav', { class: 'footlinks' }, (c.links || []).map((l) => h('a', { href: l.url, target: '_blank', rel: 'noopener' }, l.label + ' ↗'))),
     h('span', { class: 'muted' }, 'Versio ' + (c.build || CFG.buildVersion)));
 
   home.append(header, hero, docs, parts, cont, authors, footer);
+  // Comments on the home page itself (same pipeline as the PDF comments).
+  import('./homecomments.js' + V).then((m) => m.initHomeComments(CFG, flash)).catch((e) => console.warn('homecomments', e));
 }
 
 function toggleTheme() {
