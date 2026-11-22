@@ -60,14 +60,14 @@ window.CF2_CONFIG = {
   docVersions: {},
 };
 
-/* publish2.mjs 20261122-0905 */
+/* publish2.mjs 20261122-1219 */
 Object.assign(window.CF2_CONFIG, {
-  "buildVersion": "20261122-0905",
+  "buildVersion": "20261122-1219",
   "docVersions": {
-    "kirja": "0b8380c04ce6",
+    "kirja": "e79ee677bd9f",
     "ratkaisut": "e0c1bbebd713",
     "lukukartta": "0a64c0ae6345",
-    "kirja-en": "4fae9c30bbab",
+    "kirja-en": "1ad664d1cc5c",
     "ratkaisut-en": "8935701b09ee"
   }
 });
