@@ -122,6 +122,9 @@ async function unlock(b64, how) {
   try { jsonCache.delete('content.json.enc'); c = await decryptJson('content.json.enc', key); }
   catch (e) { jsonCache.clear(); return false; }
   cryptoKey = key; content = c;
+  // Chapter map for analytics (in memory only): activity.js resolves a page to its part and chapter.
+  CFG.toc = { parts: (c.parts || []).map((p) => ({ osa: p.id, dest: p.dest, ratkDest: p.ratkDest || null })),
+    chapters: (c.parts || []).flatMap((p) => (p.luvut || []).map((l) => ({ osa: p.id, luku: l.ref, dest: l.dest }))) };
   try { sessionStorage.setItem(KEY_SS, b64); } catch (_) {}
   renderHome(content);
   route({ initial: true });
@@ -390,6 +393,7 @@ function renderHome(c) {
   home.append(header, hero, docs, parts, cont, renderComparison(c.comparison, S), authors, footer);
   // Comments on the home page itself (same pipeline as the PDF comments).
   import('./homecomments.js' + V).then((m) => m.initHomeComments(CFG, flash)).catch((e) => console.warn('homecomments', e));
+  import('./homeactivity.js' + V).then((m) => m.initHomeActivity(CFG, track)).catch((e) => console.warn('homeactivity', e));
 }
 
 /* Comparison with other works (content.comparison). All text comes from the encrypted

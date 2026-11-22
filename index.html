@@ -12,9 +12,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap" />
-<link rel="stylesheet" href="./site.css?v=20261121-2006" />
-<link rel="stylesheet" href="./reader.css?v=20261121-2006" />
-<script src="./config.js?v=20261121-2006"></script>
+<link rel="stylesheet" href="./site.css?v=20261122-0112" />
+<link rel="stylesheet" href="./reader.css?v=20261122-0112" />
+<script src="./config.js?v=20261122-0112"></script>
 <script>
   // Theme (light / dark / auto) before first paint.
   (function () { try { var t = localStorage.getItem('cf2:theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; } catch (_) {} })();
@@ -25,7 +25,8 @@
     window.__MYPA_SITE__ = c.site;
     window.__MYPA_ENDPOINT__ = c.collectEndpoint;
     window.__MYPA_IDENTITY_KEY__ = c.identityKey || 'unitas:identity';
-    window.__MYPA_EXTRA__ = { v: c.buildVersion || 'dev' };
+    // vid = one page load (a visit); session_id on the server is per device per day.
+    window.__MYPA_EXTRA__ = { v: c.buildVersion || 'dev', vid: Date.now().toString(36) + Math.random().toString(36).slice(2, 8) };
     var s = document.createElement('script'); s.src = './vendor/mypa/analytics.js'; s.defer = true; document.head.appendChild(s);
   })(window.CF2_CONFIG);
 </script>
@@ -155,6 +156,6 @@
 
 <div id="toast">&nbsp;</div>
 
-<script type="module" src="./app.js?v=20261121-2006"></script>
+<script type="module" src="./app.js?v=20261122-0112"></script>
 </body>
 </html>
