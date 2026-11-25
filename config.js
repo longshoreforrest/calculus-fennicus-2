@@ -6,7 +6,7 @@
  * cf2-gate Worker after a verified Google sign-in, never from this file.
  */
 window.CF2_CONFIG = {
-  title: 'Calculus Fennicus II — Oppimisen matematiikka',
+  title: 'Calculus Fennicus II — Oppimisen ja tekoälyn matematiikka',
 
   // ---- Access gate (Cloudflare Worker cf2-gate) ----
   // POST {idToken} → 200 {key (base64, 32 bytes), email, owner} | 403 {error:'not_allowed'} | 401 {error:'bad_token'}
@@ -60,14 +60,14 @@ window.CF2_CONFIG = {
   docVersions: {},
 };
 
-/* publish2.mjs 20261125-1309 */
+/* publish2.mjs 20261125-1416 */
 Object.assign(window.CF2_CONFIG, {
-  "buildVersion": "20261125-1309",
+  "buildVersion": "20261125-1416",
   "docVersions": {
-    "kirja": "2167411a8325",
-    "ratkaisut": "e0c1bbebd713",
-    "lukukartta": "0a64c0ae6345",
-    "kirja-en": "4d69e2ceba07",
-    "ratkaisut-en": "8935701b09ee"
+    "kirja": "f2d8fef49d4b",
+    "ratkaisut": "c190f9b2280d",
+    "lukukartta": "f1fb8b87a8a8",
+    "kirja-en": "a8d5c1679c77",
+    "ratkaisut-en": "a5d02cc86ad6"
   }
 });
