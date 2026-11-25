@@ -60,9 +60,9 @@ window.CF2_CONFIG = {
   docVersions: {},
 };
 
-/* publish2.mjs 20261125-1437 */
+/* publish2.mjs 20261125-1637 */
 Object.assign(window.CF2_CONFIG, {
-  "buildVersion": "20261125-1437",
+  "buildVersion": "20261125-1637",
   "docVersions": {
     "kirja": "d7e283671b2e",
     "ratkaisut": "c190f9b2280d",
